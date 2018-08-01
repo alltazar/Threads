@@ -4,7 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Main {
-    public static void main(String[] args){
+
+    static int i = 0;
+
+    public static void main(String[] args) {
 
         JTextArea text = new JTextArea();
         MyButton button = new MyButton(text);
@@ -16,11 +19,37 @@ public class Main {
         JFrame frame = new JFrame("Paint Test");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(contentPanel);
-        frame.setBounds(0,0,200,200);
+        frame.setBounds(0, 0, 200, 200);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+        int myList[] = {5,5};
+
     }
 }
+
+//        for (int j = 0; j < 10000; j++){
+//            new MyThread2().start();
+//        }
+//        try {
+//            MyThread2.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(i);
+//    }
+
+//    static class MyThread2 extends Thread{
+//        @Override
+//        public void run(){
+//            plus();
+//        }
+//    }
+//
+//    static synchronized void plus(){
+//        i++;
+//    }
+
 
 class MyButton extends JButton{
     JTextArea text_;
@@ -32,9 +61,10 @@ class MyButton extends JButton{
             @Override
             public void actionPerformed(ActionEvent e) {
                 MyThread myThread = new MyThread(text);
-                MyThread myThread2 = new MyThread(text);
+                //MyThread myThread2 = new MyThread(text);
                 myThread.start();
-                myThread2.doSmth(text);
+                //myThread2.doSmth(text);
+                //text.append("OK");
             }
         });
     }
@@ -70,7 +100,13 @@ class MyThread extends Thread{
             }
         }
 
-        text_.append("End with array");
+        int export = 0;
+
+        for (int j = 0; j < arr.length - 1; j++) {
+            export += arr[j];
+        }
+
+        text_.append(""+export);
     }
 
     public void doSmth(JTextArea text){
