@@ -9,12 +9,18 @@ public class Main {
 
     public static void main(String[] args) {
 
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setStringPainted(true);
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(150000);
+
         JTextArea text = new JTextArea();
-        MyButton button = new MyButton(text);
+        MyButton button = new MyButton(text, progressBar);
 
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.add(button, BorderLayout.NORTH);
         contentPanel.add(text, BorderLayout.CENTER);
+        contentPanel.add(progressBar, BorderLayout.SOUTH);
 
         JFrame frame = new JFrame("Paint Test");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,6 +28,9 @@ public class Main {
         frame.setBounds(0, 0, 200, 200);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+
+        progressBar.setValue(30);
 
         int myList[] = {5,5};
 
@@ -53,14 +62,17 @@ public class Main {
 
 class MyButton extends JButton{
     JTextArea text_;
+    JProgressBar progressBar_;
 
-    MyButton(JTextArea text){
+    MyButton(JTextArea text, JProgressBar progressBar){
         super("Посчитать");
         text_ = text;
+        progressBar_ = progressBar;
         this.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MyThread myThread = new MyThread(text);
+                myThread.setProgressBar_(progressBar_);
                 //MyThread myThread2 = new MyThread(text);
                 myThread.start();
                 //myThread2.doSmth(text);
@@ -73,6 +85,15 @@ class MyButton extends JButton{
 class MyThread extends Thread{
 
     JTextArea text_;
+    JProgressBar progressBar_;
+
+    public JProgressBar getProgressBar_() {
+        return progressBar_;
+    }
+
+    public void setProgressBar_(JProgressBar progressBar_) {
+        this.progressBar_ = progressBar_;
+    }
 
     MyThread(JTextArea text){
         text_ = text;
@@ -83,8 +104,11 @@ class MyThread extends Thread{
         int result = 50000;
         int[] arr = new int[result];
 
+        int toProgressBar = 0;
+
         for (int i = 1; i < result; i ++){
             arr[i] = (int) Math.round((Math.random() * 30));
+            progressBar_.setValue(toProgressBar++);
         }
 
         for (int j = 0; j < arr.length - 1; j++) {
@@ -98,12 +122,14 @@ class MyThread extends Thread{
                     }
                 }
             }
+            progressBar_.setValue(toProgressBar++);
         }
 
         int export = 0;
 
         for (int j = 0; j < arr.length - 1; j++) {
             export += arr[j];
+            progressBar_.setValue(toProgressBar++);
         }
 
         text_.append(""+export);
